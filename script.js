@@ -120,14 +120,18 @@ chatbotToggler.addEventListener('click', () => {
         isFirstClick=false;
         document.body.classList.toggle('show-chatbot')
         sendIcon.style.visibility = 'hidden'
-
         handleShipbotResponse('chatStart');
+        window.removeEventListener('scroll', handleScroll);
         
     }
-    else{document.body.classList.toggle('show-chatbot')}
+    else{document.body.classList.toggle('show-chatbot')
+    }
 
 });
-chatbotCloseBtn.addEventListener('click', () => document.body.classList.remove('show-chatbot'));
+chatbotCloseBtn.addEventListener('click', () => 
+    {document.body.classList.remove('show-chatbot');
+
+});
 
 // ShipBot Logic
 const shipbotData = {
@@ -355,7 +359,23 @@ button.style.cursor = 'not-allowed';
         talkToAIBtn.style.display = 'none';
     }
 };
+function showPopup() {
+    const popup = document.querySelector('.popup');
+    popup.classList.add('show');
 
+    // Set a timeout to remove the 'show' class after a specific time
+    setTimeout(() => {
+        popup.classList.remove('show');
+    }, 2500); // Adjust the time as needed (3000ms = 3 seconds)
+}
+function handleScroll() {
+    const scrollThreshold = 300; // Adjust this value to trigger the popup at a specific scroll position
+    if (window.scrollY > scrollThreshold) {
+        showPopup();
+        window.removeEventListener('scroll', handleScroll); // Remove the scroll event listener after triggering
+    }
+}
+window.addEventListener('scroll', handleScroll);
 window.onload = () => {
     text_area.disabled = true;
     text_area.style.cursor = "not-allowed";
