@@ -15,23 +15,32 @@ const inputInitHeight = '62px'; // Initial height of the textarea
 const createChatLi = (message, className) => {
     const chatLi = document.createElement('li');
     chatLi.classList.add("chat", className);
-
     let chatContent;
     if (className === "outgoing") {
         chatContent = `<p></p>`;
     } else { if(isShipbotMode){
-
+        
         chatContent = `<img src="shipglobalin_logo.jpeg" alt="sdf"><p></p>`;
     }
-else{
-    chatContent = `<img src="Ai_logo.png" alt="sdf"><p></p>`;
+    else{
+        chatContent = `<img src="Ai_logo.png" alt="sdf"><p></p>`;
+        
+    }
+}    
+
+if (message === 'Oops! something went wrong Please try again.'){
+    chatLi.innerHTML = chatContent;
+    chatLi.querySelector("p").textContent = message;
+    chatLi.querySelector("p").style.backgroundColor='rgba(200,0,0,0.4)';
+    chatLi.querySelector("p").style.color='rgba(200,0,0,1)';
+    return chatLi;
 
 }
-    }    
-    
+else{
     chatLi.innerHTML = chatContent;
     chatLi.querySelector("p").textContent = message;
     return chatLi;
+}   
 };
 
 const generateResponse = () => {
@@ -61,7 +70,7 @@ const generateResponse = () => {
         })
         .catch((error) => {
             console.log(error);
-            return 'Sorry, something went wrong!';
+            return 'Oops! something went wrong Please try again.';
         });
 };
 

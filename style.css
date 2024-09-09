@@ -224,7 +224,6 @@ gap: 10px;
 
 }
 .chatbox .incoming p{
-    color: black;
     background: rgb(31,73,158);
     color: white;
     border-radius: 10px 10px 10px 0;
