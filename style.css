@@ -11,6 +11,7 @@ body{
 
 .bgg img{
     display: block;
+    width: 100%;
     border: none;
     margin: 0;
     padding: 0;
@@ -133,13 +134,28 @@ body{
     padding-bottom: 10px ;
 }
 
+.chatbot header #reset {
+    position: absolute;
+    color: white;
+    left: 20px;
+    top: 50%;
+    height: 25px;
+    width: 25px;
+    cursor: pointer;
+transform: translateY(-50%);
+
+}
+.chatbot header #reset:hover{
+    color: rgb(22,193,26);
+}
+
 .chatbot header .close-btn {
     position: absolute;
     color: white;
     right: 20px;
     top: 50%;
-    height: 35px;
-    width: 35px;
+    height: 25px;
+    width: 25px;
     cursor: pointer;
 transform: translateY(-50%);
 display: none;

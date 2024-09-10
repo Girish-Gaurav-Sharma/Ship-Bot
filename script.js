@@ -7,6 +7,21 @@ const chatbotCloseBtn = document.querySelector('.close-btn');
 const sendIcon = document.querySelector('.chat-input svg')
 const optionButton = document.querySelectorAll('button .option-button')
 const urlButton = document.querySelectorAll('button .url-button')
+const resetBtn = document.querySelector('#reset')
+resetBtn.addEventListener('click',function(){
+    var msgi = document.querySelectorAll('.incoming')
+    var msgo = document.querySelectorAll('.outgoing')
+    msgi.forEach(lis=>{
+        lis.remove()
+    }
+    )
+    msgo.forEach(lis=>{
+        lis.remove()
+    }
+    )
+
+    handleShipbotResponse('chatStart')
+})
 let userMessage;
 const API_KEY = "AIzaSyAMqXwox4Pja-8XMymtyQC0nxi0Hxcxnpo"
 const inputInitHeight = '62px'; // Initial height of the textarea
