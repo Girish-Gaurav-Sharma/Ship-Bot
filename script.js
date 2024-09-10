@@ -1,4 +1,3 @@
-// AI Bot Logic
 const sendChatBtn = document.querySelector('.chat-input svg');
 const chatInput = document.querySelector('.chat-input textarea');
 const chatbox = document.querySelector('.chatbox');
@@ -8,6 +7,12 @@ const sendIcon = document.querySelector('.chat-input svg')
 const optionButton = document.querySelectorAll('button .option-button')
 const urlButton = document.querySelectorAll('button .url-button')
 const resetBtn = document.querySelector('#reset')
+const inputInitHeight = '62px'; // Initial height of the textarea
+let userMessage;
+const API_KEY = "AIzaSyAMqXwox4Pja-8XMymtyQC0nxi0Hxcxnpo"
+
+
+// Reset button
 resetBtn.addEventListener('click',function(){
     var msgi = document.querySelectorAll('.incoming')
     var msgo = document.querySelectorAll('.outgoing')
@@ -22,42 +27,37 @@ resetBtn.addEventListener('click',function(){
 
     handleShipbotResponse('chatStart')
 })
-let userMessage;
-const API_KEY = "AIzaSyAMqXwox4Pja-8XMymtyQC0nxi0Hxcxnpo"
-const inputInitHeight = '62px'; // Initial height of the textarea
 
+
+
+// Listing items in the chat box---------------------------
 
 const createChatLi = (message, className) => {
     const chatLi = document.createElement('li');
     chatLi.classList.add("chat", className);
-    let chatContent;
-    if (className === "outgoing") {
-        chatContent = `<p></p>`;
-    } else { if(isShipbotMode){
-        
-        chatContent = `<img src="shipglobalin_logo.jpeg" alt="sdf"><p></p>`;
-    }
-    else{
-        chatContent = `<img src="Ai_logo.png" alt="sdf"><p></p>`;
-        
-    }
-}    
 
-if (message === 'Oops! something went wrong Please try again.'){
-    chatLi.innerHTML = chatContent;
-    chatLi.querySelector("p").textContent = message;
-    chatLi.querySelector("p").style.backgroundColor='rgba(200,0,0,0.4)';
-    chatLi.querySelector("p").style.color='rgba(200,0,0,1)';
-    return chatLi;
+    // Define content based on className and isShipbotMode
+    const chatContent = className === "outgoing" 
+        ? `<p></p>` 
+        : `<img src="${isShipbotMode ? 'shipglobalin_logo.jpeg' : 'Ai_logo.png'}" alt="logo"><p></p>`;
 
-}
-else{
+    // Set innerHTML and message content
     chatLi.innerHTML = chatContent;
-    chatLi.querySelector("p").textContent = message;
+    const messageParagraph = chatLi.querySelector("p");
+    messageParagraph.textContent = message;
+
+    // Customize styles for error message
+    if (message === 'Oops! something went wrong Please try again.') {
+        messageParagraph.style.backgroundColor = 'rgba(200,0,0,0.4)';
+        messageParagraph.style.color = 'rgba(200,0,0,1)';
+    }
+
     return chatLi;
-}   
 };
 
+
+
+// AI Response Generator----------------------
 const generateResponse = () => {
     const API_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent";
     const requestOptions = {
@@ -89,6 +89,8 @@ const generateResponse = () => {
         });
 };
 
+
+// Handel User Input-------------------------------------------
 const handleChat = () => {
     userMessage = chatInput.value.trim();
 
@@ -101,18 +103,18 @@ const handleChat = () => {
     chatInput.style.height = inputInitHeight;
     chatInput.focus();
     
-    // Append "Thinking..." message immediately
-    
     // Call generateResponse and wait for the response
     setTimeout(() => {
         
         generateResponse().then((apiResponse) => {
-            // Remove "Thinking..." message and add actual response
-            chatbox.append(createChatLi(apiResponse, 'incoming')); // Appends the actual response
+            chatbox.append(createChatLi(apiResponse, 'incoming')); 
     
             chatbox.scrollTo(0, chatbox.scrollHeight);
         });
     }, 600);
+
+
+
 };
 
 
@@ -129,6 +131,9 @@ chatInput.addEventListener("keydown", (e) => {
 });
 
 sendChatBtn.addEventListener('click', handleChat);
+
+
+// Handle toggler button--------------------------------------
 var isFirstClick = true;
 chatbotToggler.addEventListener('click', () => {
     if(isFirstClick){
@@ -148,7 +153,11 @@ chatbotCloseBtn.addEventListener('click', () =>
 
 });
 
-// ShipBot Logic
+
+
+
+// ShipBot Logic ####################################
+ //Data Set--------------------------------
 const shipbotData = {
     chatStart: {
         title: ["Hey There", "I am Mr. ShipBot", "How can I help you today?"],
@@ -268,7 +277,7 @@ const shipbotData = {
     }
   
 };
-
+// Create URL Buttns Or Option Button--------
 const createButton = (text, isUrl = false) => {
     const button = document.createElement('button');
     button.textContent = text;
@@ -276,6 +285,8 @@ const createButton = (text, isUrl = false) => {
     return button;
 };
 
+
+// Handle shipbot buttons--------------------------
 const handleShipbotResponse = (key) => {
     const response = shipbotData[key];
     var indexCount=response.title.length+2;
@@ -321,7 +332,11 @@ const handleShipbotResponse = (key) => {
 
 };
 
-// Switching Logic
+
+
+
+
+// Switching Logic to switch bwtween AI mode and Bot Mode----------
 const talkToShipbotBtn = document.querySelector('#talk-to-shipbot');
 const talkToAIBtn = document.querySelector('#talk-to-ai');
 const chatInputContainer = document.querySelector('.chat-input');
@@ -352,8 +367,6 @@ console.log(urlButton);    // Should output a NodeList of buttons
 
 const switchToAI = () => {
     if (isShipbotMode) {
-        console.log(optionButton); // Should output a NodeList of buttons
-        console.log(urlButton);    // Should output a NodeList of buttons
         isShipbotMode = false;
         setTimeout(() => {
             
@@ -361,36 +374,49 @@ const switchToAI = () => {
             chatbox.scrollTop = chatbox.scrollHeight;
         }, 1000);
         optionButton.forEach(button =>{button.style.pointerEvents = 'none';
-button.style.cursor = 'not-allowed';
+            button.style.cursor = 'not-allowed';
         });
         urlButton.forEach(button =>{button.style.pointerEvents = 'none';
             button.style.cursor = 'not-allowed';});
 
-        sendIcon.style.visibility = 'visible'
-        text_area.disabled = false;
-        text_area.style.cursor = "auto";
-        text_area.placeholder = "Enter your question....";
-        talkToShipbotBtn.style.display = 'block';
+            sendIcon.style.visibility = 'visible'
+            text_area.disabled = false;
+            text_area.style.cursor = "auto";
+            text_area.placeholder = "Enter your question....";
+            talkToShipbotBtn.style.display = 'block';
         talkToAIBtn.style.display = 'none';
     }
 };
+
+talkToShipbotBtn.addEventListener('click', switchToShipbot);
+talkToAIBtn.addEventListener('click', switchToAI);
+
+
+
+// Welocome PopUp Message--------------------
 function showPopup() {
     const popup = document.querySelector('.popup');
     popup.classList.add('show');
-
-    // Set a timeout to remove the 'show' class after a specific time
+    
     setTimeout(() => {
         popup.classList.remove('show');
-    }, 2500); // Adjust the time as needed (3000ms = 3 seconds)
+    }, 2500); 
 }
+
+// Trigger welcome message with scroll----------------
 function handleScroll() {
-    const scrollThreshold = 300; // Adjust this value to trigger the popup at a specific scroll position
+    const scrollThreshold = 300; 
     if (window.scrollY > scrollThreshold) {
         showPopup();
-        window.removeEventListener('scroll', handleScroll); // Remove the scroll event listener after triggering
+        window.removeEventListener('scroll', handleScroll); 
     }
 }
 window.addEventListener('scroll', handleScroll);
+
+
+
+
+// when website loads---------------------------------
 window.onload = () => {
     text_area.disabled = true;
     text_area.style.cursor = "not-allowed";
@@ -400,5 +426,4 @@ window.onload = () => {
     
 };
 
-talkToShipbotBtn.addEventListener('click', switchToShipbot);
-talkToAIBtn.addEventListener('click', switchToAI);
+
